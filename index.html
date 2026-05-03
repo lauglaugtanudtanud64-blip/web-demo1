@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEXEON SUPPLY — Premium Street Essentials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <a class="nav-logo" href="#hero">LEXEON SUPPLY<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#categories">Shop</a></li>
+    <li><a href="#latest">New Drops</a></li>
+    <li><a href="#bestsellers">Best Sellers</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="javascript:void(0)" onclick="openResellerPage()" class="nav-reseller-link">Resellers &#9733;</a></li>
+    <li><a href="#footer-contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="cart-btn" onclick="openCart()" title="View Cart">
+      🛒<span class="cart-count" id="cartCount">0</span>
+    </button>
+    <button class="nav-reseller-btn" onclick="openResellerPage()">Resellers</button>
+    <button class="nav-cta" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Shop Now</button>
+  </div>
+</nav>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-header">
+    <span class="cart-title">Your Cart</span>
+    <button class="cart-close" onclick="closeCart()">&#10005;</button>
+  </div>
+  <div class="cart-body" id="cartBody">
+    <div class="cart-empty" id="cartEmpty">
+      <div class="cart-empty-icon">&#128722;</div>
+      <p>Your cart is empty</p>
+    </div>
+    <div id="cartItems"></div>
+  </div>
+  <div class="cart-footer" id="cartFooter" style="display:none">
+    <div class="cart-subtotal">
+      <span class="cart-subtotal-label">Subtotal</span>
+      <span class="cart-subtotal-val" id="cartSubtotal">&#8369;0</span>
+    </div>
+    <p class="cart-shipping-note">Free shipping on orders over &#8369;75 &middot; COD available</p>
+    <button class="cart-checkout-btn" onclick="openCheckout()">Proceed to Checkout &rarr;</button>
+    <button class="cart-continue" onclick="closeCart()">Continue Shopping</button>
+  </div>
+</div>
+
+<!-- QUICK VIEW MODAL -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box" id="modalBox">
+    <div class="modal-img-area" id="modalImg"></div>
+    <div class="modal-info" id="modalInfo"></div>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="checkout-overlay" id="checkoutOverlay" onclick="if(event.target===this)closeCheckout()">
+  <div class="checkout-box" id="checkoutBox">
+    <div class="checkout-header">
+      <span class="checkout-title">Checkout</span>
+      <button class="cart-close" onclick="closeCheckout()">&#10005;</button>
+    </div>
+    <div class="checkout-steps" id="checkoutStepTabs">
+      <div class="checkout-step active" id="stab1">1 &middot; Info</div>
+      <div class="checkout-step" id="stab2">2 &middot; Shipping</div>
+      <div class="checkout-step" id="stab3">3 &middot; Review</div>
+    </div>
+    <div class="checkout-body" id="checkoutBody">
+
+      <!-- Step 1: Contact Info -->
+      <div class="checkout-section active" id="step1">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">First Name</label><input class="form-input" type="text" id="fname" placeholder="Juan"></div>
+          <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" type="text" id="lname" placeholder="Dela Cruz"></div>
+        </div>
+        <div class="form-row full"><div class="form-group"><label class="form-label">Email Address</label><input class="form-input" type="email" id="email" placeholder="you@email.com"></div></div>
+        <div class="form-row full"><div class="form-group"><label class="form-label">Phone / Messenger Number</label><input class="form-input" type="tel" id="phone" placeholder="09XX XXX XXXX"></div></div>
+        <div class="checkout-nav">
+          <button class="checkout-next" onclick="goStep(2)">Continue to Shipping &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Step 2: Shipping -->
+      <div class="checkout-section" id="step2">
+        <div class="form-row full"><div class="form-group"><label class="form-label">Street Address</label><input class="form-input" type="text" id="address" placeholder="123 Mango Ave, Unit 4B"></div></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">City</label><input class="form-input" type="text" id="city" placeholder="Cebu City"></div>
+          <div class="form-group"><label class="form-label">Province / State</label><input class="form-input" type="text" id="province" placeholder="Cebu"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">ZIP Code</label><input class="form-input" type="text" id="zip" placeholder="6000"></div>
+          <div class="form-group"><label class="form-label">Country</label>
+            <select class="form-input form-select" id="country">
+              <option value="Philippines">Philippines</option>
+              <option value="United States">United States</option>
+              <option value="Australia">Australia</option>
+              <option value="United Kingdom">United Kingdom</option>
+              <option value="Singapore">Singapore</option>
+              <option value="UAE">UAE</option>
+              <option value="Canada">Canada</option>
+            </select>
+          </div>
+        </div>
+        <div class="checkout-nav">
+          <button class="checkout-back" onclick="goStep(1)">&larr; Back</button>
+          <button class="checkout-next" onclick="goStep(3)">Review Order &rarr;</button>
+        </div>
+      </div>
+
+      <!-- Step 3: Review & Confirm -->
+      <div class="checkout-section" id="step3">
+        <div class="checkout-order-summary">
+          <div class="checkout-summary-title">Order Summary</div>
+          <div id="coItems"></div>
+          <div class="checkout-totals">
+            <div class="checkout-total-row"><span>Subtotal</span><span id="coSub">&#8369;0</span></div>
+            <div class="checkout-total-row"><span>Shipping</span><span id="coShip">&#8369;0</span></div>
+            <div class="checkout-total-row grand"><span>Total</span><span id="coTotal">&#8369;0</span></div>
+          </div>
+        </div>
+        <div class="review-info-block">
+          <div class="review-info-label">Contact</div>
+          <div id="coContact" class="review-info-val"></div>
+        </div>
+        <div class="review-info-block">
+          <div class="review-info-label">Ship To</div>
+          <div id="coAddress" class="review-info-val"></div>
+        </div>
+        <!-- Messenger CTA notice -->
+        <div class="messenger-notice">
+          <div class="messenger-notice-icon">&#128172;</div>
+          <div>
+            <div class="messenger-notice-title">Payment via Facebook Messenger</div>
+            <div class="messenger-notice-sub">After placing your order, you'll be redirected to our Facebook page to complete payment. The seller will receive your full order details and arrange payment with you directly.</div>
+          </div>
+        </div>
+        <div class="checkout-nav">
+          <button class="checkout-back" onclick="goStep(2)">&larr; Back</button>
+          <button class="checkout-next checkout-place-btn" id="placeBtn" onclick="placeOrder()">
+            <span>Place Order &amp; Message Seller</span>
+            <span class="place-btn-icon">&#128172;</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon">&#10022;</span><span id="toastMsg"></span></div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!--  RESELLER PAGE (full-screen overlay)                  -->
+<!-- ══════════════════════════════════════════════════════ -->
+<div id="resellerPage" class="rp-page" style="display:none">
+
+  <!-- sticky back bar -->
+  <div class="rp-topbar">
+    <button class="rp-back-btn" onclick="closeResellerPage()">&#8592; Back to Store</button>
+    <span class="rp-topbar-title">Reseller Program</span>
+    <div class="rp-topbar-right">
+      <div class="rp-mode-toggle">
+        <span class="rp-mode-lbl" id="modeLblRetail">Retail</span>
+        <div class="rp-switch" id="priceSwitch" onclick="togglePricingMode()">
+          <div class="rp-switch-knob" id="switchKnob"></div>
+        </div>
+        <span class="rp-mode-lbl" id="modeLblWholesale">Wholesale</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="rp-inner">
+
+    <!-- ── HERO ── -->
+    <div class="rp-hero">
+      <div class="rp-hero-eyebrow">&#9733; Exclusive Reseller Program &#9733;</div>
+      <h1 class="rp-hero-title">Sell. Earn.<br><span>Keep the Difference.</span></h1>
+      <p class="rp-hero-sub">Join 10,000+ active resellers. Get wholesale pricing on all products — no minimum order. Sell at retail, pocket the profit.</p>
+      <div class="rp-hero-cta">
+        <button class="rp-cta-gold" onclick="document.getElementById('rpApplySection').scrollIntoView({behavior:'smooth'})">Apply Now — It&#39;s Free</button>
+        <button class="rp-cta-ghost" onclick="document.getElementById('rpPricingSection').scrollIntoView({behavior:'smooth'})">See Pricing &#8595;</button>
+      </div>
+      <div class="rp-badges">
+        <div class="rp-badge-item"><div class="rp-badge-num">10K+</div><div class="rp-badge-lbl">Active Resellers</div></div>
+        <div class="rp-badge-div"></div>
+        <div class="rp-badge-item"><div class="rp-badge-num">30%</div><div class="rp-badge-lbl">Avg. Discount</div></div>
+        <div class="rp-badge-div"></div>
+        <div class="rp-badge-item"><div class="rp-badge-num">0</div><div class="rp-badge-lbl">Min. Order</div></div>
+        <div class="rp-badge-div"></div>
+        <div class="rp-badge-item"><div class="rp-badge-num">24h</div><div class="rp-badge-lbl">Approval Time</div></div>
+      </div>
+    </div>
+
+    <!-- ── PRICING TOGGLE NOTICE ── -->
+    <div class="rp-toggle-notice" id="rpToggleNotice">
+      <span class="rp-tn-icon">&#128200;</span>
+      <span id="rpToggleText">Showing <strong>Retail Prices</strong> — toggle above to see Wholesale pricing available to approved resellers</span>
+    </div>
+
+    <!-- ── PRODUCT PRICING ── -->
+    <div id="rpPricingSection">
+      <div class="rp-section-head">
+        <div class="rp-section-label">All Products — Live Pricing</div>
+        <div class="rp-section-sub">Same products, two prices. Toggle between retail and wholesale at the top.</div>
+      </div>
+      <div class="rp-product-grid" id="rpProductGrid"></div>
+    </div>
+
+    <!-- ── PROFIT CALCULATOR ── -->
+    <div class="rp-calculator">
+      <div class="rp-calc-eyebrow">Tool</div>
+      <div class="rp-calc-title">&#128200; Profit Calculator</div>
+      <div class="rp-calc-sub">See exactly how much you earn per order</div>
+      <div class="rp-calc-body">
+        <div class="rp-calc-col">
+          <label class="form-label">Select Product</label>
+          <select class="form-input form-select" id="calcProd" onchange="calcProfit()">
+            <option value="">Choose a product...</option>
+          </select>
+        </div>
+        <div class="rp-calc-col">
+          <label class="form-label">Quantity</label>
+          <input class="form-input" type="number" id="calcQty" value="10" min="1" oninput="calcProfit()">
+        </div>
+      </div>
+      <div class="rp-calc-result" id="calcResult" style="display:none">
+        <div class="rp-cr-row"><span>You buy at (wholesale)</span><span id="crWs">&#8369;0</span></div>
+        <div class="rp-cr-row"><span>Customer pays (retail)</span><span id="crRt">&#8369;0</span></div>
+        <div class="rp-cr-row profit"><span>Profit per piece</span><span id="crPer" class="cr-green">&#8369;0</span></div>
+        <div class="rp-cr-divider"></div>
+        <div class="rp-cr-row total"><span>Total profit on <strong id="crQtyLbl">10</strong> pcs</span><span id="crTotal" class="cr-green cr-big">&#8369;0</span></div>
+      </div>
+    </div>
+
+    <!-- ── HOW IT WORKS ── -->
+    <div class="rp-section-head" style="margin-top:4rem">
+      <div class="rp-section-label">How It Works</div>
+    </div>
+    <div class="rp-steps">
+      <div class="rp-step"><div class="rp-step-n">01</div><div><div class="rp-step-title">Apply &amp; Get Approved</div><div class="rp-step-desc">Fill the form below. We send your reseller code via Messenger within 24 hours.</div></div></div>
+      <div class="rp-step"><div class="rp-step-n">02</div><div><div class="rp-step-title">Order at Wholesale Price</div><div class="rp-step-desc">Use your code when messaging us to get wholesale pricing. No minimum order required.</div></div></div>
+      <div class="rp-step"><div class="rp-step-n">03</div><div><div class="rp-step-title">Sell &amp; Keep the Profit</div><div class="rp-step-desc">Sell to your buyers at retail price. The markup is yours — 100%.</div></div></div>
+      <div class="rp-step"><div class="rp-step-n">04</div><div><div class="rp-step-title">Dropship Option</div><div class="rp-step-desc">We ship direct to your buyers. No inventory. No risk. Just profit.</div></div></div>
+    </div>
+
+    <!-- ── PERKS ── -->
+    <div class="rp-section-head" style="margin-top:4rem">
+      <div class="rp-section-label">Reseller Benefits</div>
+    </div>
+    <div class="rp-perks">
+      <div class="rp-perk"><div class="rp-perk-icon">&#128176;</div><div class="rp-perk-title">Up to 35% Off</div><div class="rp-perk-desc">Wholesale prices not available to the public</div></div>
+      <div class="rp-perk"><div class="rp-perk-icon">&#128666;</div><div class="rp-perk-title">Dropshipping</div><div class="rp-perk-desc">We ship to your buyers under your brand</div></div>
+      <div class="rp-perk"><div class="rp-perk-icon">&#128172;</div><div class="rp-perk-title">Priority Support</div><div class="rp-perk-desc">Dedicated Messenger line for reseller orders</div></div>
+      <div class="rp-perk"><div class="rp-perk-icon">&#128293;</div><div class="rp-perk-title">First Access</div><div class="rp-perk-desc">See new drops before the public</div></div>
+      <div class="rp-perk"><div class="rp-perk-icon">&#128200;</div><div class="rp-perk-title">No Minimum</div><div class="rp-perk-desc">Order as low as 1 piece at wholesale price</div></div>
+      <div class="rp-perk"><div class="rp-perk-icon">&#128247;</div><div class="rp-perk-title">Free Photo Kit</div><div class="rp-perk-desc">Product photos &amp; graphics for social selling</div></div>
+    </div>
+
+    <!-- ── APPLICATION FORM ── -->
+    <div class="rp-apply-box" id="rpApplySection">
+      <div class="rp-apply-eyebrow">&#127381; Join Free</div>
+      <h2 class="rp-apply-title">Apply as a Reseller</h2>
+      <p class="rp-apply-sub">Submit your details below. We'll send your reseller code and welcome kit via Messenger within 24 hours.</p>
+      <div class="rp-form-grid">
+        <div class="form-group"><label class="form-label">Full Name *</label><input class="form-input" type="text" id="rpName" placeholder="Juan Dela Cruz"></div>
+        <div class="form-group"><label class="form-label">Phone Number *</label><input class="form-input" type="tel" id="rpPhone" placeholder="09XX XXX XXXX"></div>
+        <div class="form-group"><label class="form-label">Facebook / Messenger</label><input class="form-input" type="text" id="rpFb" placeholder="facebook.com/yourname"></div>
+        <div class="form-group"><label class="form-label">City / Location</label><input class="form-input" type="text" id="rpCity" placeholder="Cebu City"></div>
+        <div class="form-group rp-form-full">
+          <label class="form-label">Where will you sell?</label>
+          <select class="form-input form-select" id="rpPlatform">
+            <option value="">-- Select platform --</option>
+            <option>Facebook / Facebook Shop</option>
+            <option>Instagram</option>
+            <option>TikTok Shop</option>
+            <option>Shopee</option>
+            <option>Lazada</option>
+            <option>Physical Store / Tiangge</option>
+            <option>Personal Network</option>
+            <option>Multiple Platforms</option>
+          </select>
+        </div>
+        <div class="form-group rp-form-full">
+          <label class="form-label">Estimated monthly volume?</label>
+          <select class="form-input form-select" id="rpVolume">
+            <option value="">-- Select volume --</option>
+            <option>1–10 pieces/month</option>
+            <option>11–30 pieces/month</option>
+            <option>31–50 pieces/month</option>
+            <option>50–100 pieces/month</option>
+            <option>100+ pieces/month</option>
+          </select>
+        </div>
+      </div>
+      <button class="rp-apply-btn" onclick="submitResellerApp()">
+        &#128172; Send Application via Messenger
+      </button>
+      <p class="rp-apply-note">Your application goes directly to our Messenger. We reply within 24 hours with your code &amp; welcome kit.</p>
+    </div>
+
+  </div><!-- /rp-inner -->
+</div><!-- /resellerPage -->
+
+<!-- ── RESELLER QUICK ORDER MODAL ── -->
+<div class="rqo-overlay" id="rqoOverlay" onclick="if(event.target===this)closeRqoModal()">
+  <div class="rqo-box" id="rqoBox"></div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">&#9733; Premium Street Essentials &#9733;</p>
+    <h1 class="hero-headline">500K+<br><em>SOLD</em><br>NATIONWIDE</h1>
+    <p class="hero-sub">Exclusive drops. Premium quality. Built for those who move different. No restocks. No compromises.</p>
+    <div class="hero-actions">
+      <button class="btn-primary" onclick="document.getElementById('categories').scrollIntoView({behavior:'smooth'})">Shop The Drop</button>
+    </div>
+    <div class="hero-badge">
+      <div class="hero-badge-item"><div class="hero-badge-dot"></div><span>Free shipping over &#8369;75</span></div>
+      <div class="hero-badge-item"><div class="hero-badge-dot"></div><span>Worldwide delivery</span></div>
+      <div class="hero-badge-item"><div class="hero-badge-dot"></div><span>Pay via Messenger</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">PREMIUM QUALITY <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">500K+ SOLD <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">FREE SHIPPING <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">HIGH QUALITY <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">EXCLUSIVE DROPS <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">PREMIUM QUALITY <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">500K+ SOLD <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">FREE SHIPPING <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">HIGH QUALITY <span class="marquee-sep">&#10022;</span></span>
+    <span class="marquee-item">EXCLUSIVE DROPS <span class="marquee-sep">&#10022;</span></span>
+  </div>
+</div>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-inner">
+    <div class="stat-item reveal"><div class="stat-num" data-target="500000" data-suffix="K+">0</div><div class="stat-label">Units Sold Nationwide</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item reveal" style="transition-delay:.1s"><div class="stat-num" data-target="10000" data-suffix="K+">0</div><div class="stat-label">Active Resellers</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item reveal" style="transition-delay:.2s"><div class="stat-num" data-target="10000" data-suffix="K+">0</div><div class="stat-label">Orders Completed</div></div>
+    <div class="stat-divider"></div>
+    <div class="stat-item reveal" style="transition-delay:.3s"><div class="stat-num">4.9&#9733;</div><div class="stat-label">Average Rating</div></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section id="categories">
+  <div class="cats-header reveal">
+    <div><p class="section-label">Browse</p><h2 class="section-title">Categories</h2></div>
+  </div>
+  <div class="cats-grid">
+    <div class="cat-card reveal" style="transition-delay:.00s" onclick="scrollToDrop('drop-proclub')"><div class="cat-card-bg">&#128085;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Apparel</div><div class="cat-card-name">ProClub Inspired</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.05s" onclick="scrollToDrop('drop-sando')"><div class="cat-card-bg">&#128086;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Apparel</div><div class="cat-card-name">Sando</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.10s" onclick="scrollToDrop('drop-icebling')"><div class="cat-card-bg">&#128142;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Jewelry</div><div class="cat-card-name">IceBling</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.15s" onclick="scrollToDrop('drop-jorts')"><div class="cat-card-bg">&#129485;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Bottoms</div><div class="cat-card-name">Jorts</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.20s" onclick="scrollToDrop('drop-baggypants')"><div class="cat-card-bg">&#128087;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Bottoms</div><div class="cat-card-name">Baggy Pants</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.25s" onclick="scrollToDrop('drop-pandora')"><div class="cat-card-bg">&#128140;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Jewelry</div><div class="cat-card-name">Pandora</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.30s" onclick="scrollToDrop('drop-necklace')"><div class="cat-card-bg">&#128142;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Jewelry</div><div class="cat-card-name">Necklace</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.35s" onclick="scrollToDrop('drop-watch')"><div class="cat-card-bg">&#8987;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Accessories</div><div class="cat-card-name">Watch</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.40s" onclick="scrollToDrop('drop-boxers')"><div class="cat-card-bg">&#129650;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Essentials</div><div class="cat-card-name">Boxers</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.45s" onclick="scrollToDrop('drop-rings')"><div class="cat-card-bg">&#128144;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Jewelry</div><div class="cat-card-name">Rings</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.50s" onclick="scrollToDrop('drop-clothes')"><div class="cat-card-bg">&#129693;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Apparel</div><div class="cat-card-name">Clothes</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.55s" onclick="scrollToDrop('drop-caps')"><div class="cat-card-bg">&#127913;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Accessories</div><div class="cat-card-name">Caps</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.60s" onclick="scrollToDrop('drop-wallet')"><div class="cat-card-bg">&#128180;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Accessories</div><div class="cat-card-name">Premium Wallet</div></div><div class="cat-card-arrow">&rarr;</div></div>
+    <div class="cat-card reveal" style="transition-delay:.65s" onclick="scrollToDrop('drop-belt')"><div class="cat-card-bg">&#129521;</div><div class="cat-card-overlay"></div><div class="cat-card-glow"></div><div class="cat-card-content"><div class="cat-card-tag">Accessories</div><div class="cat-card-name">Belt</div></div><div class="cat-card-arrow">&rarr;</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- SANDO DROP — V1 & V2 (IN STOCK)               -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-sando" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#128086; Latest Drop</p>
+      <h2 class="section-title">Sando</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-sando"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PROCLUB INSPIRED DROP                          -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-proclub" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#128085; Latest Drop</p>
+      <h2 class="section-title">ProClub Inspired</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-proclub"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- ICEBLING DROP                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-icebling" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#128142; Latest Drop</p>
+      <h2 class="section-title">IceBling</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-icebling"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- JORTS DROP                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-jorts" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#129485; Latest Drop</p>
+      <h2 class="section-title">Jorts</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-jorts"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- BAGGY PANTS DROP                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-baggypants" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#128087; Latest Drop</p>
+      <h2 class="section-title">Baggy Pants</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-baggypants"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- PANDORA DROP                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-pandora" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#128140; Latest Drop</p>
+      <h2 class="section-title">Pandora</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-pandora"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- NECKLACE DROP                                  -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-necklace" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#10024; Latest Drop</p>
+      <h2 class="section-title">Necklace</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-necklace"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- WATCH DROP                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-watch" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#8987; Latest Drop</p>
+      <h2 class="section-title">Watch</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-watch"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- BOXERS DROP                                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-boxers" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#129650; Latest Drop</p>
+      <h2 class="section-title">Boxers</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-boxers"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- RINGS DROP                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-rings" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#128144; Latest Drop</p>
+      <h2 class="section-title">Rings</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-rings"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CLOTHES DROP                                   -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-clothes" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#129693; Latest Drop</p>
+      <h2 class="section-title">Clothes</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-clothes"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CAPS DROP                                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-caps" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#127913; Latest Drop</p>
+      <h2 class="section-title">Caps</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-caps"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- WALLET DROP                                    -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-wallet" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#128180; Latest Drop</p>
+      <h2 class="section-title">Premium Wallet</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-wallet"></div>
+</section>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- BELT DROP                                      -->
+<!-- ═══════════════════════════════════════════════ -->
+<section id="drop-belt" class="drop-section">
+  <div class="drop-section-header reveal">
+    <div>
+      <p class="section-label">&#129521; Latest Drop</p>
+      <h2 class="section-title">Belt</h2>
+      <div class="divider"></div>
+    </div>
+  </div>
+  <div class="products-grid" id="grid-belt"></div>
+</section>
+
+<!-- BEST SELLERS -->
+<section id="bestsellers">
+  <div class="reveal">
+    <p class="section-label">Top Picks</p>
+    <h2 class="section-title">Best Sellers</h2>
+    <p class="section-sub">The pieces everyone keeps coming back for.</p>
+    <div class="divider"></div>
+  </div>
+  <div class="featured-grid">
+    <div class="featured-main reveal" onclick="quickView(7)">
+      <div class="featured-main-img">&#8987;</div>
+      <div class="featured-main-info">
+        <span class="featured-tag">&#9733; #1 Best Seller</span>
+        <div class="featured-name">Premium Luxury Watch</div>
+        <p class="featured-desc">Stainless steel luxury watch with mineral crystal glass. Water-resistant. Automatic movement. Built to impress.</p>
+        <div style="display:flex;align-items:center;gap:1.5rem;margin-bottom:1.5rem">
+          <span class="featured-price">&#8369;1,299</span>
+          <span style="font-size:.72rem;color:var(--gray-dim);font-weight:600;letter-spacing:.12em">145 SOLD</span>
+        </div>
+        <button class="btn-primary" onclick="event.stopPropagation();addToCart(7,1,null)">Add to Cart</button>
+      </div>
+    </div>
+    <div class="featured-side reveal" style="transition-delay:.1s" onclick="quickView(2)"><div class="featured-side-img">&#128142;</div><div class="featured-side-info"><div class="featured-side-tag">IceBling</div><div class="featured-side-name">Iced-Out Cuban Chain Set</div><div class="featured-side-price">&#8369;599</div></div><div class="featured-side-arrow">&rarr;</div></div>
+    <div class="featured-side reveal" style="transition-delay:.2s" onclick="quickView(8)"><div class="featured-side-img">&#129650;</div><div class="featured-side-info"><div class="featured-side-tag">Boxers</div><div class="featured-side-name">Premium Boxer Pack (3pcs)</div><div class="featured-side-price">&#8369;299</div></div><div class="featured-side-arrow">&rarr;</div></div>
+    <div class="featured-side reveal" style="transition-delay:.3s" onclick="quickView(10)"><div class="featured-side-img">&#129693;</div><div class="featured-side-info"><div class="featured-side-tag">Clothes</div><div class="featured-side-name">Signature Oversized Hoodie</div><div class="featured-side-price">&#8369;799</div></div><div class="featured-side-arrow">&rarr;</div></div>
+  </div>
+</section>
+
+<!-- FEEDBACK MODAL -->
+<div class="fb-overlay" id="fbOverlay" onclick="if(event.target===this)closeFeedbackModal()">
+  <div class="fb-modal" id="fbModal">
+    <div class="fb-modal-header">
+      <div>
+        <div class="fb-modal-eyebrow">Share Your Experience</div>
+        <div class="fb-modal-title">Leave a Review</div>
+      </div>
+      <button class="cart-close" onclick="closeFeedbackModal()">&#10005;</button>
+    </div>
+    <div class="fb-modal-body">
+      <!-- Identity (required, not anonymous) -->
+      <div class="fb-identity-notice">
+        <span class="fb-notice-icon">&#128100;</span>
+        <span>Reviews are <strong>not anonymous</strong> — your name and photo will be shown publicly on this page.</span>
+      </div>
+      <div class="fb-form-row">
+        <div class="form-group">
+          <label class="form-label">Full Name <span class="fb-req">*</span></label>
+          <input class="form-input" type="text" id="fbName" placeholder="Juan Dela Cruz" maxlength="60">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Location <span class="fb-req">*</span></label>
+          <input class="form-input" type="text" id="fbLocation" placeholder="Cebu City" maxlength="50">
+        </div>
+      </div>
+      <div class="fb-form-row">
+        <div class="form-group">
+          <label class="form-label">What did you buy? <span class="fb-req">*</span></label>
+          <select class="form-input form-select" id="fbProduct">
+            <option value="">-- Select product --</option>
+            <option>Sando V1 — Classic Cut</option>
+            <option>Sando V2 — Premium Oversized</option>
+            <option>ProClub Inspired Heavyweight Tee</option>
+            <option>Iced-Out Cuban Chain Set</option>
+            <option>Premium Denim Jorts</option>
+            <option>Street Baggy Cargo Pants</option>
+            <option>Pandora-Style Charm Bracelet</option>
+            <option>Gold-Plated Layered Necklace</option>
+            <option>Premium Luxury Watch</option>
+            <option>Premium Boxer Pack (3pcs)</option>
+            <option>Iced-Out Statement Ring Stack</option>
+            <option>Signature Oversized Hoodie</option>
+            <option>Snapback Street Cap</option>
+            <option>Slim Premium Leather Wallet</option>
+            <option>Premium Leather Belt</option>
+            <option>Multiple Items</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Avatar Initial (optional)</label>
+          <input class="form-input" type="text" id="fbInitial" placeholder="e.g. J" maxlength="2" style="text-transform:uppercase">
+        </div>
+      </div>
+      <!-- Star Rating -->
+      <div class="fb-rating-group">
+        <label class="form-label">Your Rating <span class="fb-req">*</span></label>
+        <div class="fb-stars" id="fbStars">
+          <span class="fb-star" data-val="1" onclick="setRating(1)">&#9733;</span>
+          <span class="fb-star" data-val="2" onclick="setRating(2)">&#9733;</span>
+          <span class="fb-star" data-val="3" onclick="setRating(3)">&#9733;</span>
+          <span class="fb-star" data-val="4" onclick="setRating(4)">&#9733;</span>
+          <span class="fb-star" data-val="5" onclick="setRating(5)">&#9733;</span>
+        </div>
+        <span class="fb-rating-label" id="fbRatingLabel">Tap a star to rate</span>
+      </div>
+      <!-- Review Text -->
+      <div class="form-group" style="margin-top:1rem">
+        <label class="form-label">Your Review <span class="fb-req">*</span></label>
+        <textarea class="form-input fb-textarea" id="fbText" placeholder="Tell us about your experience — quality, fit, delivery, overall satisfaction..." maxlength="500"></textarea>
+        <div class="fb-char-count"><span id="fbCharCount">0</span>/500</div>
+      </div>
+      <!-- Verified purchase checkbox -->
+      <label class="fb-verify-row">
+        <input type="checkbox" id="fbVerified" class="fb-checkbox">
+        <span>I confirm this is a genuine purchase from LEXEON SUPPLY</span>
+      </label>
+    </div>
+    <div class="fb-modal-footer">
+      <button class="fb-cancel-btn" onclick="closeFeedbackModal()">Cancel</button>
+      <button class="fb-submit-btn" onclick="submitFeedback()">
+        &#9733; Submit Review
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- REVIEWS SECTION -->
+<section id="reviews">
+  <div class="reviews-header reveal">
+    <div>
+      <p class="section-label">&#9733; Verified Customer Reviews</p>
+      <h2 class="section-title">What They're Saying</h2>
+      <p class="section-sub">Real reviews from real customers — not anonymous, not fake.</p>
+      <div class="divider"></div>
+    </div>
+    <div class="reviews-summary" id="reviewsSummary">
+      <div class="rev-avg-score" id="revAvgScore">5.0</div>
+      <div class="rev-avg-right">
+        <div class="rev-avg-stars" id="revAvgStars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="rev-avg-count" id="revAvgCount">Based on 0 reviews</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Review Cards Grid -->
+  <div class="reviews-grid" id="reviewsGrid">
+    <!-- Seeded sample reviews rendered by JS -->
+  </div>
+
+  <!-- Empty state -->
+  <div class="reviews-empty" id="reviewsEmpty" style="display:none">
+    <div class="reviews-empty-icon">&#128172;</div>
+    <div class="reviews-empty-text">No reviews yet — be the first!</div>
+  </div>
+
+  <!-- CTA -->
+  <div class="reviews-cta reveal">
+    <button class="reviews-write-btn" onclick="openFeedbackModal()">
+      &#43; Write a Review
+    </button>
+    <p class="reviews-cta-note">Your name and product will be shown publicly. Thank you for your honest feedback!</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer-contact">
+  <div class="footer-top">
+    <div class="footer-brand">
+      <span class="footer-logo">LX<span>.</span></span>
+      <p class="footer-brand-text">Premium street essentials. Built for culture. Worn by those who set the standard.</p>
+      <div class="footer-socials">
+        <a class="social-btn" href="#" title="Instagram">IG</a>
+        <a class="social-btn" href="#" title="TikTok">TK</a>
+        <a class="social-btn" href="#" title="Twitter/X">X</a>
+        <a class="social-btn" href="#" title="WhatsApp">WA</a>
+      </div>
+    </div>
+    <div class="footer-col"><div class="footer-col-title">Shop</div><ul><li><a href="#latest">New Drops</a></li><li><a href="#categories">ProClub Inspired</a></li><li><a href="#categories">IceBling</a></li><li><a href="#categories">Jorts &amp; Baggy Pants</a></li><li><a href="#categories">Watches</a></li><li><a href="#categories">Rings &amp; Necklace</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Company</div><ul><li><a href="#">About Us</a></li><li><a href="javascript:void(0)" onclick="openResellerPage()">Reseller Program</a></li><li><a href="javascript:void(0)" onclick="openResellerPage()">Wholesale</a></li><li><a href="#">Careers</a></li><li><a href="#">Press</a></li></ul></div>
+    <div class="footer-col"><div class="footer-col-title">Support</div><ul><li><a href="#">Track Order</a></li><li><a href="#">Returns</a></li><li><a href="#">Shipping Info</a></li><li><a href="#">Size Guide</a></li><li><a href="#">Contact Us</a></li><li><a href="#">FAQ</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">&copy; 2025 LEXEON SUPPLY. All rights reserved.</span>
+    <div class="footer-legal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
